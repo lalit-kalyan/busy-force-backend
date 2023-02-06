@@ -1,6 +1,6 @@
 const Member = require("../models/Member");
 
-//* MANUAL ACTIVATE MEMBER............................
+//*MANUAL ACTIVATE MEMBER....................................................
 const manulaActivation = async (req, res) => {
   const { userId } = req.params;
   try {
@@ -9,7 +9,7 @@ const manulaActivation = async (req, res) => {
     const todaysDate = new Date();
     let newActiveDate = lastActiveDate;
 
-    //?..........WHAN YEARS ARE SAME.......................
+    //?..........WHAN YEARS ARE SAME.........................................
     if (lastActiveDate.getFullYear() === todaysDate.getFullYear()) {
       if (
         lastActiveDate.getDate() <= todaysDate.getDate() &&
@@ -20,7 +20,7 @@ const manulaActivation = async (req, res) => {
         } - ${lastActiveDate.getDate()}`;
       }
     }
-    //?..........WHAN YEARS ARE NOT SAME.......................
+    //?..........WHAN YEARS ARE NOT SAME.....................................
 
     if (lastActiveDate.getFullYear() != todaysDate.getFullYear()) {
       if (
@@ -45,7 +45,7 @@ const manulaActivation = async (req, res) => {
   }
 };
 
-//*................. AUTO DEACTIVATE MEMBER..............................
+//*................. AUTO DEACTIVATE MEMBER..................................
 const autoDeactivate = async (req, res) => {
   const { userId } = req.params;
   try {
@@ -54,7 +54,7 @@ const autoDeactivate = async (req, res) => {
     const todaysDate = new Date();
     let activationCancle = true;
 
-    //?..........WHAN YEARS ARE SAME.......................
+    //..........WHAN YEARS ARE SAME.........................................
     if (lastActiveDate.getFullYear() === todaysDate.getFullYear()) {
       if (
         lastActiveDate.getDate() <= todaysDate.getDate() &&
@@ -63,8 +63,7 @@ const autoDeactivate = async (req, res) => {
         activationCancle = false;
       }
     }
-
-    //?..........WHAN YEARS ARE NOT SAME.......................
+    //..........WHAN YEARS ARE NOT SAME.....................................
 
     if (lastActiveDate.getFullYear() != todaysDate.getFullYear()) {
       if (
@@ -86,4 +85,4 @@ const autoDeactivate = async (req, res) => {
   }
 };
 
-module.exports = { autoDeactivate, manulaActivation };
+module.exports = { autoDeactivate, manulaActivation }; 

@@ -5,6 +5,14 @@ const cloudinary = require("cloudinary").v2;
 const registerMember = async (req, res) => {
   const { username, email, phone, pic, joining, isActiveMember, plan } =
     req.body;
+  console.log({
+    username,
+    email,
+    phone,
+    pic,
+    joining,
+    plan,
+  });
 
   try {
     if (!username || !email || !phone || !joining) {
@@ -50,7 +58,7 @@ const registerMember = async (req, res) => {
 //!..........LOGIN.....................................................
 const memberLogin = async (req, res) => {
   const { email, phone } = req.body;
-  //console.log(typeof(phone));
+  //console.log(req.body);
 
   try {
     if (!email || !phone) {
@@ -60,7 +68,6 @@ const memberLogin = async (req, res) => {
     }
 
     const user = await Member.findOne({ email });
-    //console.log(typeof(user.phone) );
 
     if (user) {
       if (user.phone === phone) {
@@ -72,6 +79,7 @@ const memberLogin = async (req, res) => {
           pic: user.pic,
           joining: user.joining,
           lastActive: user.lastActive,
+          plan: user.plan,
         });
       } else {
         res.status(401).json("Invalid  phone");

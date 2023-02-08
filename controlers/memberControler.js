@@ -3,23 +3,14 @@ const cloudinary = require("cloudinary").v2;
 
 //*register MEMBER....................................................
 const registerMember = async (req, res) => {
-  const { username, email, phone, pic, joining, isActiveMember, plan } =
+  const { username, email, phone, pic, joining, isActiveMember, plan, planId } =
     req.body;
-  console.log({
-    username,
-    email,
-    phone,
-    pic,
-    joining,
-    plan,
-  });
-
   try {
-    if (!username || !email || !phone || !joining) {
+    if (!username || !email || !phone || !joining || !planId) {
       return res
         .status(401)
         .json(
-          " Error : username ,joining  date ,  email and mobile no.  must be required to register"
+          " Error : username , planId , joining  date ,  email and mobile no.  must be required to register"
         );
     }
 
@@ -46,6 +37,7 @@ const registerMember = async (req, res) => {
       lastActive: joining,
       isActiveMember,
       plan,
+      planId,
     });
     if (member) {
       res.status(201).json(member);
@@ -211,7 +203,7 @@ const getMember = async (req, res) => {
 const getAllMember = async (req, res) => {
   try {
     const user = await Member.find();
-    res.status(401).json(user);
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json(error.message);
   }

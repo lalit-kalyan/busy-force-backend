@@ -11,6 +11,7 @@ const {
   manulaActivation,
   autoDeactivate,
 } = require("../controlers/activationControler");
+const { autoDeactivateMember } = require("../controlers/deactiveAutomatically");
 const { verfyAdmin } = require("../middleware/verifyAdmin");
 
 router.route("/").post(registerMember);
@@ -21,5 +22,6 @@ router.route("/all").get(getAllMember);
 router.route("/:userId").get(getMember);
 router.route("/activate/:userId").put(verfyAdmin, manulaActivation);
 router.route("/deactivate/:userId").put(autoDeactivate);
+router.route("/auto").post(autoDeactivateMember);
 
 module.exports = router;

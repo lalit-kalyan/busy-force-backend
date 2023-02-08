@@ -9,6 +9,7 @@ const memberSchema = mongoose.Schema(
     joining: { type: "Date", required: true },
     lastActive: { type: "Date", required: true },
     plan: { type: "Number" },
+    planId: { type: "String", required: true },
     pic: {
       type: "String",
       default:

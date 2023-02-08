@@ -4,7 +4,7 @@ const cloudinary = require("cloudinary").v2;
 
 //*register COntrollers....................................................
 const registerAdmin = async (req, res) => {
-  const { username, email, phone } = req.body;
+  const { username, email, phone, pic } = req.body;
 
   try {
     if (!username || !email || !phone) {
@@ -29,22 +29,11 @@ const registerAdmin = async (req, res) => {
         .json(`Error message: this  already exist : PHONE ....!`);
     }
 
-    const file = req.files.photo;
-    const result = await cloudinary.uploader.upload(
-      file.tempFilePath,
-      (err, result) => {
-        if (err) {
-          return res.status(401).json(err);
-        }
-        return result;
-      }
-    );
-
     const admin = await Admin.create({
       username,
       email,
       phone,
-      pic: result.url,
+      pic,
     });
     if (admin) {
       res.status(201).json({
@@ -63,7 +52,7 @@ const registerAdmin = async (req, res) => {
 //!..........LOGIN.....................................................
 const adminLogin = async (req, res) => {
   const { email, phone } = req.body;
-
+  //console.log({ email, phone });
   try {
     if (!email || !phone) {
       return res
@@ -72,6 +61,7 @@ const adminLogin = async (req, res) => {
     }
 
     const user = await Admin.findOne({ email });
+    //console.log(user);
 
     //!JWT  ACCESS-TOKEN GENERATING......................
     const accessToken = jwt.sign(
@@ -83,9 +73,10 @@ const adminLogin = async (req, res) => {
       { expiresIn: "15d" }
     );
     //!JWT  ACCESSTAKEN GENERATING END...................
+    //console.log(accessToken);
 
     if (user) {
-      if (user.phone === phone) {
+      if (user.phone === +phone) {
         res.status(200).json({
           _id: user._id,
           username: user.username,

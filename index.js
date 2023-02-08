@@ -12,15 +12,6 @@ const galleryRoute = require("./routers/galleryRoute");
 const fileUpload = require("express-fileupload");
 const treasuryRoute = require("./routers/treasuryRoute");
 
-const cloudinary = require("cloudinary").v2;
-
-cloudinary.config({
-  cloud_name: "kalyanmitthu",
-  api_key: "659122321462785",
-  api_secret: "WccE0HTmSQRJBRXhsBdob-_IDEs",
-  secure: true,
-});
-
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 connectDB();

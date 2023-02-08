@@ -3,13 +3,8 @@ const goldDeactivate = (lastActiveDate, todaysDate) => {
     lastActiveDate.setMonth(lastActiveDate.getMonth() + 3)
   );
 
-  if (lastActiveDate.getFullYear() === todaysDate.getFullYear()) {
-    if (
-      lastActiveDate.getDate() <= todaysDate.getDate() &&
-      memberLastActiveDate <= todaysDate
-    ) {
-      return false;
-    }
+  if (memberLastActiveDate <= todaysDate) {
+    return false;
   }
 };
 

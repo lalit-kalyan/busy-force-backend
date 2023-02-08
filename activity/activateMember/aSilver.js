@@ -1,12 +1,11 @@
-const silverDeative = (lastActiveDate, todaysDate) => {
+const silverActivate = (lastActiveDate, todaysDate) => {
   const memberLastActiveDate = new Date(
     lastActiveDate.setMonth(lastActiveDate.getMonth() + 1)
   );
   if (memberLastActiveDate <= todaysDate) {
-    return false;
+    return memberLastActiveDate;
   }
 };
-
 module.exports = {
-  silverDeative,
+  silverActivate,
 };

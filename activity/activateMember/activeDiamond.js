@@ -1,12 +1,12 @@
-const diamondDeactive = (lastActiveDate, todaysDate) => {
+const diamondActivate = (lastActiveDate, todaysDate) => {
   const memberLastActiveDate = new Date(
     lastActiveDate.setMonth(lastActiveDate.getMonth() + 12)
   );
   if (memberLastActiveDate <= todaysDate) {
-    return false;
+    return memberLastActiveDate;
   }
 };
 
 module.exports = {
-  diamondDeactive,
+  diamondActivate,
 };

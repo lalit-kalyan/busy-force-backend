@@ -52,7 +52,7 @@ const registerAdmin = async (req, res) => {
 //!..........LOGIN.....................................................
 const adminLogin = async (req, res) => {
   const { email, phone } = req.body;
-  //console.log({ email, phone });
+  console.log({ email, phone });
   try {
     if (!email || !phone) {
       return res
@@ -61,7 +61,7 @@ const adminLogin = async (req, res) => {
     }
 
     const user = await Admin.findOne({ email });
-    //console.log(user);
+    console.log(user);
 
     //!JWT  ACCESS-TOKEN GENERATING......................
     const accessToken = jwt.sign(
@@ -73,7 +73,7 @@ const adminLogin = async (req, res) => {
       { expiresIn: "15d" }
     );
     //!JWT  ACCESSTAKEN GENERATING END...................
-    //console.log(accessToken);
+    console.log(accessToken);
 
     if (user) {
       if (user.phone === +phone) {
@@ -209,3 +209,8 @@ module.exports = {
   deleteAdmin,
   getAdmin,
 };
+
+
+//https://res.cloudinary.com/kalyanmitthu
+//https://api.cloudinary.com/v1_1/kalyanmitthu
+//https://res.cloudinary.com/kalyanmitthu/image/upload/v1676302267/z3y1yrkfp9gygnznthhc.jpg

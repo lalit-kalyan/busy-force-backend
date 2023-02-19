@@ -7,7 +7,7 @@ const verfyAdmin = async (req, res, next) => {
   
 
   if (headerToken) {
-    token = headerToken.split(" ")[1];
+    token = headerToken.split(' ')[1];
     //console.log("this is token", token);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);

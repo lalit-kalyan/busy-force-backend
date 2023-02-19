@@ -7,15 +7,15 @@ const countByMonth = async (req, res) => {
 
   //Month ID....
   const monthId = `${monthStart.getFullYear()}${date.getMonth() + 1}`;
-
+  //console.log(monthId);
   try {
     const dataOfMembers = await Member.aggregate([
       {
-        $match: { lastActive: { $gte: monthStart }, isActive: true },
+        $match: { isActive: true },
       },
       {
         $group: {
-          _id: "isActive",
+          _id: "monthCode",
           total: { $sum: "$plan" },
           totalMember: { $sum: 1 },
         },
@@ -24,7 +24,15 @@ const countByMonth = async (req, res) => {
 
     const findMonthData = await Treasury.findOne({ monthId });
 
-    if (findMonthData) {
+    if (!findMonthData) {
+      await Treasury.create({
+        activeMonth: monthStart,
+        activeNo: dataOfMembers[0].totalMember,
+        totalIncome: dataOfMembers[0].total,
+        monthId: monthId,
+      });
+      res.status(201).json("new month data created.....!");
+    } else {
       await Treasury.findOneAndUpdate(
         monthId,
         {
@@ -37,14 +45,6 @@ const countByMonth = async (req, res) => {
       );
 
       res.status(201).json("data has been updated.....!");
-    } else {
-      await Treasury.create({
-        activeMonth: monthStart,
-        activeNo: dataOfMembers[0].totalMember,
-        totalIncome: dataOfMembers[0].total,
-        monthId: monthId,
-      });
-      res.status(201).json("new month data created.....!");
     }
   } catch (error) {
     res.status(500).json(error);

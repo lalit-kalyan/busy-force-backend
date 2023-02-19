@@ -1,12 +1,11 @@
 const Member = require("../models/Member");
-const cloudinary = require("cloudinary").v2;
 
 //*register MEMBER....................................................
 const registerMember = async (req, res) => {
-  const { username, email, phone, pic, joining, isActiveMember, plan, planId } =
-    req.body;
+  const { username, email, phone, joining, plan, planId } = req.body;
+
   try {
-    if (!username || !email || !phone || !joining || !planId) {
+    if (!username || !email || !phone || !joining || !planId || !plan) {
       return res
         .status(401)
         .json(
@@ -28,22 +27,27 @@ const registerMember = async (req, res) => {
         .json(`Error message: this  already exist : PHONE ....!`);
     }
 
-    const member = await Member.create({
+    let getDate = new Date(joining);
+
+    let monthCode = `${getDate.getFullYear()}${getDate.getMonth() + 1}`;
+    //console.log({ getDate, monthCode });
+
+    const newMember = new Member({
       username,
       email,
       phone,
-      pic,
       joining,
       lastActive: joining,
-      isActiveMember,
+      monthCode,
       plan,
       planId,
+      pic: req.body.pic,
     });
-    if (member) {
-      res.status(201).json(member);
-    }
+    const savedMember = await newMember.save();
+
+    res.status(201).json(savedMember);
   } catch (error) {
-    res.status(401).json({ "ERROR MSG": error });
+    res.status(500).json(error);
   }
 };
 
@@ -84,13 +88,25 @@ const memberLogin = async (req, res) => {
   }
 };
 
-//!.................EDIT USER...................................
+//?.................EDIT USER...................................
 const editMember = async (req, res) => {
   const { userId } = req.params;
+  const {
+    username,
+    email,
+    phone,
+    isActive,
+    joining,
+    lastActive,
+    plan,
+    pic,
+    planId,
+  } = req.body;
 
-  const { username, email, phone, pic, isActiveMember, joining, lastActive } =
-    req.body;
-  if (!username && !email && !phone && !pic) {
+  let monthCode;
+  let getMonth;
+
+  if (!username && !email && !phone && !pic && !planId && !isActive) {
     return res
       .status(401)
       .json(" At least one field is required to updated Member...!");
@@ -100,10 +116,12 @@ const editMember = async (req, res) => {
     getUsername: "",
     getEmail: "",
     getPic: "",
-    getisActiveMember: "",
+    getisActive: "",
     getPhone: "",
     getJoining: "",
     getLastActive: "",
+    getPlan: "",
+    getPlanId: "",
   };
 
   try {
@@ -119,47 +137,62 @@ const editMember = async (req, res) => {
     } else {
       getUser.getEmail = email;
     }
-    if (!pic) {
-      getUser.getPic = user.pic;
-    } else {
-      getUser.getPic = pic;
-    }
-    if (!isActiveMember) {
-      getUser.getisActiveMember = user.isActiveMember;
-    } else {
-      getUser.getisActiveMember = isActiveMember;
-    }
     if (!phone) {
       getUser.getPhone = user.phone;
     } else {
       getUser.getPhone = phone;
     }
+    if (!isActive) {
+      getUser.getisActive = user.isActive;
+    } else {
+      getUser.getisActive = isActive;
+    }
     if (!joining) {
       getUser.getJoining = user.joining;
     } else {
-      getUser.getJoining = joining;
+      getUser.joining = joining;
     }
     if (!lastActive) {
       getUser.getLastActive = user.lastActive;
     } else {
       getUser.getLastActive = lastActive;
     }
+    if (!plan) {
+      getUser.getPlan = user.plan;
+    } else {
+      getUser.getPlan = plan;
+    }
+    if (!pic) {
+      getUser.getPic = user.pic;
+    } else {
+      getUser.getPic = pic;
+    }
+    if (!planId) {
+      getUser.getPlanId = user.planId;
+    } else {
+      getUser.getPlanId = planId;
+    }
+    if (!lastActive) {
+      getMonth = new Date(user.lastActive);
+      monthCode = `${getMonth.getFullYear()}${getMonth.getMonth() + 1}`;
+    } else {
+      getMonth = new Date(getUser.getLastActive);
+      monthCode = `${getMonth.getFullYear()}${getMonth.getMonth() + 1}`;
+    }
+    getUser.getMonthCode = monthCode;
 
-    const updatedMember = await Member.findByIdAndUpdate(
-      userId,
-      {
-        username: getUser.getUsername,
-        email: getUser.getEmail,
-        pic: getUser.getPic,
-        isActiveMember: getUser.getisActiveMember,
-        phone: getUser.getPhone,
-        joining: getUser.getJoining,
-        lastActive: getUser.getLastActive,
-      },
-      {
-        new: true,
-      }
-    );
+    await Member.findByIdAndUpdate(userId, {
+      username: getUser.getUsername,
+      email: getUser.getEmail,
+      phone: getUser.getPhone,
+      isActive: getUser.getisActive,
+      joining: getUser.getJoining,
+      monthCode: getUser.getMonthCode,
+      lastActive: getUser.getLastActive,
+      plan: getUser.getPlan,
+      planId: getUser.getPlanId,
+      pic: getUser.getPic,
+    });
 
     res.status(200).json(" User has been updated......! ");
   } catch (error) {
@@ -173,7 +206,7 @@ const deleteMember = async (req, res) => {
   try {
     if (userId) {
       const user = await Member.findById(userId);
-      console.log(user);
+      //console.log(user);
       if (user) {
         await Member.findByIdAndDelete(userId);
         res.status(200).json("user has been deleted..........!");
@@ -192,7 +225,7 @@ const getMember = async (req, res) => {
   try {
     if (userId) {
       const user = await Member.findById(userId);
-      res.status(401).json(user);
+      res.status(200).json(user);
     }
   } catch (error) {
     res.status(500).json(error.message);
@@ -208,9 +241,6 @@ const getAllMember = async (req, res) => {
     res.status(500).json(error.message);
   }
 };
-
-//?..........GET NUMBERS OF MEMBER MONTH WISE.........
-const getmemberByMonth = async (req, res) => {};
 
 module.exports = {
   registerMember,

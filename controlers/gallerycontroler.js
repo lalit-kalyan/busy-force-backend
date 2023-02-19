@@ -1,26 +1,13 @@
 const Gallery = require("../models/Gallery");
-const cloudinary = require("cloudinary").v2;
 
 //?....ADD NEW IMAGE.....
 const addImage = async (req, res) => {
-  const { title } = req.body;
+  const { title, pic } = req.body;
+  console.log({ title, pic });
   try {
-    //*......Cloudinary image upload................
-    const file = req.files.photo;
-    const result = await cloudinary.uploader.upload(
-      file.tempFilePath,
-      (err, result) => {
-        if (err) {
-          return res.status(401).json(err);
-        }
-        return result;
-      }
-    );
-    //*......Cloudinary end........................
-
     const newImage = await Gallery.create({
-      pic: result.url,
-      title: title,
+      pic,
+      title,
     });
     res.status(201).json(newImage);
   } catch (error) {

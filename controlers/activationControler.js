@@ -58,31 +58,35 @@ const manulaActivation = async (req, res) => {
     const lastActiveDate = member.lastActive;
     const todaysDate = new Date();
     let newActiveDate = lastActiveDate;
+    let activate = member.isActive;
 
     //*---------silver---------------
     if (member.planId === "silver") {
       newActiveDate = silverActivate(lastActiveDate, todaysDate);
-      console.log(newActiveDate);
+      activate = true;
     }
     //*---------gold-----------------
     if (member.planId === "gold") {
       newActiveDate = goldActivate(lastActiveDate, todaysDate);
-      console.log(newActiveDate);
+      activate = true;
     }
     //*---------platinum-------------
     if (member.planId === "platinum") {
       newActiveDate = platinumActive(lastActiveDate, todaysDate);
-      console.log(newActiveDate);
+
+      activate = true;
     }
     //*---------diamond--------------
     if (member.planId === "diamond") {
       newActiveDate = diamondActivate(lastActiveDate, todaysDate);
-      console.log(newActiveDate);
+      activate = true;
     }
     //*------UPDATE MEMBER------
+
+    //console.log(newActiveDate);
     const updatedMember = await Member.findByIdAndUpdate(
       userId,
-      { lastActiveDate: newActiveDate, isActive: true },
+      { lastActive: newActiveDate, isActive: activate },
       { new: true }
     );
     res.status(200).json(updatedMember);

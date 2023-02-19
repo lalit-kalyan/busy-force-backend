@@ -1,14 +1,15 @@
 const mongoose = require("mongoose");
 
-const memberSchema = mongoose.Schema(
+const memberSchema = new mongoose.Schema(
   {
     username: { type: "String", required: true },
     email: { type: "String", unique: true, required: true },
-    phone: { type: "String", required: true, unique: true },
+    phone: { type: "Number", required: true, unique: true },
     isActive: { type: "Boolean", required: true, default: false },
     joining: { type: "Date", required: true },
+    monthCode: { type: "Number", required: true },
     lastActive: { type: "Date", required: true },
-    plan: { type: "Number" },
+    plan: { type: "Number", required: true },
     planId: { type: "String", required: true },
     pic: {
       type: "String",
@@ -19,5 +20,4 @@ const memberSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const Member = mongoose.model("Member", memberSchema);
-module.exports = Member;
+module.exports = mongoose.model("Member", memberSchema);

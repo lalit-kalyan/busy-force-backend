@@ -1,13 +1,12 @@
 const goldActivate = (lastActiveDate, todaysDate) => {
+  if (lastActiveDate <= todaysDate) {
     const memberLastActiveDate = new Date(
       lastActiveDate.setMonth(lastActiveDate.getMonth() + 3)
     );
-  
-    if (memberLastActiveDate <= todaysDate) {
-      return memberLastActiveDate
-    }
-  };
-  
-  module.exports = {
-    goldActivate,
-  };
+    return memberLastActiveDate;
+  }
+};
+
+module.exports = {
+  goldActivate,
+};

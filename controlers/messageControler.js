@@ -3,6 +3,7 @@ dotenv.config();
 
 const SID = process.env.SID;
 const AUTH_TOKEN = process.env.T_TOKEN;
+//console.log({ SID, AUTH_TOKEN });
 const client = require("twilio")(SID, AUTH_TOKEN);
 
 const singleMessage = async (req, res) => {
@@ -14,7 +15,7 @@ const singleMessage = async (req, res) => {
       to: `+91${mobile}`,
     });
 
-    res.status(200).json({ "ERROR MSG": "message sent" });
+    res.status(200).json({ "ERROR MSG": "message sent", "MSG DATA": msgData });
   } catch (error) {
     res.status(400).json(error);
   }

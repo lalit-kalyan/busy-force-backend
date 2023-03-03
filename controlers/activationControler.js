@@ -15,7 +15,7 @@ const autoDeactivate = async (req, res) => {
     const member = await Member.findById(userId);
 
     const lastActiveDate = new Date(member.lastActive);
-    //console.log( "lastActive DATE____", lastActiveDate);
+    //console.log("lastActive DATE____", lastActiveDate);
     const todaysDate = new Date();
     let activationCancle = null;
 
@@ -55,6 +55,13 @@ const autoDeactivate = async (req, res) => {
 //*------------MANUAL ACTIVATE MEMBER--------------------------------------
 const manulaActivation = async (req, res) => {
   const { userId } = req.params;
+
+  const date = new Date();
+  const monthStart = new Date(date.setDate(01));
+  //Month ID....
+  const monthId = +`${monthStart.getFullYear()}${date.getMonth() + 1}`;
+  //console.log(typeof monthId);
+
   try {
     const member = await Member.findById(userId);
     const lastActiveDate = member.lastActive;
@@ -88,7 +95,7 @@ const manulaActivation = async (req, res) => {
     //console.log(newActiveDate);
     const updatedMember = await Member.findByIdAndUpdate(
       userId,
-      { lastActive: newActiveDate, isActive: activate },
+      { lastActive: newActiveDate, isActive: activate, monthCode: monthId },
       { new: true }
     );
     res.status(200).json(updatedMember);

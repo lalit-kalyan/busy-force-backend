@@ -52,7 +52,7 @@ const registerAdmin = async (req, res) => {
 //!..........LOGIN.....................................................
 const adminLogin = async (req, res) => {
   const { email, phone } = req.body;
-  console.log({ email, phone });
+  // console.log({ email, phone });
   try {
     if (!email || !phone) {
       return res
@@ -61,7 +61,7 @@ const adminLogin = async (req, res) => {
     }
 
     const user = await Admin.findOne({ email });
-    console.log(user);
+    // console.log(user);
 
     //!JWT  ACCESS-TOKEN GENERATING......................
     const accessToken = jwt.sign(
@@ -73,7 +73,7 @@ const adminLogin = async (req, res) => {
       { expiresIn: "15d" }
     );
     //!JWT  ACCESSTAKEN GENERATING END...................
-    console.log(accessToken);
+    //console.log(accessToken);
 
     if (user) {
       if (user.phone === +phone) {
@@ -99,9 +99,11 @@ const adminLogin = async (req, res) => {
 //!.................EDIT USER...................................
 const editAdmin = async (req, res) => {
   const { userId } = req.params;
+  console.log(userId);
 
-  const { username, email, phone, isAdmin } = req.body;
-  if (!username && !email && !phone && !isAdmin) {
+  const { username, email, phone, isAdmin, pic } = req.body;
+  console.log(pic);
+  if (!username && !email && !phone && !isAdmin && !pic) {
     return res
       .status(401)
       .json(" At least one field is required to updated Admin...!");
@@ -112,6 +114,7 @@ const editAdmin = async (req, res) => {
     getEmail: "",
     getIsAdmin: "",
     getPhone: "",
+    getPic: "",
   };
 
   try {
@@ -137,25 +140,21 @@ const editAdmin = async (req, res) => {
     } else {
       getUser.getPhone = phone;
     }
+    if (!pic) {
+      getUser.getPic = user.pic;
+    } else {
+      getUser.getPic = pic;
+    }
+
     // console.log(" db USER.......>>", user);
     // console.log("get USER.......>>", getUser);
-    const file = req.files.photo;
-    const result = await cloudinary.uploader.upload(
-      file.tempFilePath,
-      (err, result) => {
-        if (err) {
-          return res.status(401).json(err);
-        }
-        return result;
-      }
-    );
 
     const updateAdmin = await Admin.findByIdAndUpdate(
       userId,
       {
         username: getUser.getUsername,
         email: getUser.getEmail,
-        pic: result.url,
+        pic: getUser.getPic,
         isAdmin: getUser.getIsAdmin,
         phone: getUser.getPhone,
       },
@@ -195,8 +194,18 @@ const getAdmin = async (req, res) => {
   try {
     if (userId) {
       const user = await Admin.findById(userId);
-      res.status(401).json(user);
+      res.status(200).json(user);
     }
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
+
+//?...........GET ALL ADMIN...............................
+const getAllAdmin = async (req, res) => {
+  try {
+    const user = await Admin.find();
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json(error.message);
   }
@@ -208,9 +217,5 @@ module.exports = {
   editAdmin,
   deleteAdmin,
   getAdmin,
+  getAllAdmin,
 };
-
-
-//https://res.cloudinary.com/kalyanmitthu
-//https://api.cloudinary.com/v1_1/kalyanmitthu
-//https://res.cloudinary.com/kalyanmitthu/image/upload/v1676302267/z3y1yrkfp9gygnznthhc.jpg

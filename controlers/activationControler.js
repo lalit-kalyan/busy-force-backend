@@ -8,19 +8,21 @@ const { goldActivate } = require("../activity/activateMember/activeGold");
 const { platinumActive } = require("../activity/activateMember/activePlatinum");
 const { diamondActivate } = require("../activity/activateMember/activeDiamond");
 
-//!................. AUTO DEACTIVATE MEMBER..................................
+//!................. AUTO DEACTIVATE MEMBER............
 const autoDeactivate = async (req, res) => {
   const { userId } = req.params;
   try {
     const member = await Member.findById(userId);
 
     const lastActiveDate = new Date(member.lastActive);
+    //console.log( "lastActive DATE____", lastActiveDate);
     const todaysDate = new Date();
-    let activationCancle = true;
+    let activationCancle = null;
 
     //!---------------silver Plan----------------------
     if (member.planId === "silver") {
       activationCancle = silverDeative(lastActiveDate, todaysDate);
+      //console.log("silver member:", activationCancle);
     }
 
     //!---------------gold Plan------------------------

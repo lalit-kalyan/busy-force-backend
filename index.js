@@ -9,7 +9,7 @@ const memberRoute = require("./routers/memberRouter");
 const galleryRoute = require("./routers/galleryRoute");
 const fileUpload = require("express-fileupload");
 const treasuryRoute = require("./routers/treasuryRoute");
-const messageRoute = require("./routers/messageRouter")
+const messageRoute = require("./routers/messageRouter");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;

@@ -235,12 +235,24 @@ const getMember = async (req, res) => {
 //?...........GET ALL MEMBER...............................
 const getAllMember = async (req, res) => {
   try {
-    const user = await Member.find();
+    const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+    //console.log(keyword);
+
+    const user = await Member.find(keyword);
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json(error.message);
   }
 };
+
+//?...........SEARCH MEMBER................................
 
 module.exports = {
   registerMember,

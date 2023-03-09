@@ -2,7 +2,7 @@ const Member = require("../models/Member");
 
 //*register MEMBER....................................................
 const registerMember = async (req, res) => {
-  const { username, email, phone, joining, plan, planId } = req.body;
+  const { username, email, phone, joining, plan, planId, pic } = req.body;
 
   try {
     if (!username || !email || !phone || !joining || !planId || !plan) {
@@ -30,7 +30,7 @@ const registerMember = async (req, res) => {
     let getDate = new Date(joining);
 
     let monthCode = `${getDate.getFullYear()}${getDate.getMonth() + 1}`;
-    //console.log({ getDate, monthCode });
+    console.log({ getDate, monthCode });
 
     const newMember = new Member({
       username,
@@ -41,7 +41,7 @@ const registerMember = async (req, res) => {
       monthCode,
       plan,
       planId,
-      pic: req.body.pic,
+      pic,
     });
     const savedMember = await newMember.save();
 
@@ -102,6 +102,9 @@ const editMember = async (req, res) => {
     pic,
     planId,
   } = req.body;
+
+  let getDate = new Date(joining);
+  let currentMonthCode = `${getDate.getFullYear()}${getDate.getMonth() + 1}`;
 
   let monthCode;
   let getMonth;
@@ -174,7 +177,8 @@ const editMember = async (req, res) => {
     }
     if (!lastActive) {
       getMonth = new Date(user.lastActive);
-      monthCode = `${getMonth.getFullYear()}${getMonth.getMonth() + 1}`;
+      // monthCode = `${getMonth.getFullYear()}${getMonth.getMonth() + 1}`;
+      monthCode = user.monthCode;
     } else {
       getMonth = new Date(getUser.getLastActive);
       monthCode = `${getMonth.getFullYear()}${getMonth.getMonth() + 1}`;
@@ -236,13 +240,13 @@ const getMember = async (req, res) => {
 const getAllMember = async (req, res) => {
   try {
     const keyword = req.query.search
-    ? {
-        $or: [
-          { name: { $regex: req.query.search, $options: "i" } },
-          { email: { $regex: req.query.search, $options: "i" } },
-        ],
-      }
-    : {};
+      ? {
+          $or: [
+            { name: { $regex: req.query.search, $options: "i" } },
+            { email: { $regex: req.query.search, $options: "i" } },
+          ],
+        }
+      : {};
     //console.log(keyword);
 
     const user = await Member.find(keyword);

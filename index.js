@@ -31,5 +31,5 @@ app.use("/api/treasury", treasuryRoute);
 app.use("/api/message", messageRoute);
 
 app.listen(PORT, () => {
-  console.log(`app is running on http://localhost:${PORT}`.cyan.bold.underline);
+  console.log(`app is running on ${PORT}`.cyan.bold.underline);
 });

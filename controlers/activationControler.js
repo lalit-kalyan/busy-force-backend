@@ -55,6 +55,7 @@ const autoDeactivate = async (req, res) => {
 //*------------MANUAL ACTIVATE MEMBER--------------------------------------
 const manulaActivation = async (req, res) => {
   const { userId } = req.params;
+  //console.log(userId);
 
   const date = new Date();
   const monthStart = new Date(date.setDate(01));
@@ -91,7 +92,6 @@ const manulaActivation = async (req, res) => {
       activate = true;
     }
     //*------UPDATE MEMBER------
-
     //console.log(newActiveDate);
     const updatedMember = await Member.findByIdAndUpdate(
       userId,

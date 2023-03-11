@@ -11,6 +11,7 @@ const memberSchema = new mongoose.Schema(
     lastActive: { type: "Date", required: true },
     plan: { type: "Number", required: true },
     planId: { type: "String", required: true },
+    picId: { type: "String", required: true },
     pic: {
       type: "String",
       default:

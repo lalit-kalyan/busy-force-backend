@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const gallerySchema = mongoose.Schema(
   {
     title: { type: "String", required: true },
+    publicId: { type: "String", required: true },
     pic: {
       type: "String",
       default:

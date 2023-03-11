@@ -4,7 +4,8 @@ const adminSchema = mongoose.Schema(
   {
     username: { type: "String", required: true },
     email: { type: "String", unique: true, required: true },
-    phone: { type: "Number",unique: true, required: true },
+    phone: { type: "Number", unique: true, required: true },
+    picId: { type: "String", required: true },
     pic: {
       type: "String",
       default:

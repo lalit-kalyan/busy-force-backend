@@ -14,6 +14,7 @@ const verfyAdmin = async (req, res, next) => {
       //console.log("decoded data>>>>", decoded);
 
       const user = await Admin.findById(decoded.id);
+      //console.log("USER-->", user);
 
       if (user.isAdmin === true) {
         next();

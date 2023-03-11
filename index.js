@@ -7,21 +7,15 @@ const connectDB = require("./cinfig/db");
 const adminRoute = require("./routers/adminRoute");
 const memberRoute = require("./routers/memberRouter");
 const galleryRoute = require("./routers/galleryRoute");
-const fileUpload = require("express-fileupload");
 const treasuryRoute = require("./routers/treasuryRoute");
 const messageRoute = require("./routers/messageRouter");
+const multer = require("multer");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 connectDB();
 app.use(express.json());
 app.use(cors({ origin: true, credentials: true }));
-
-app.use(
-  fileUpload({
-    useTempFiles: true,
-  })
-);
 
 //ROUTER.............
 app.use("/api/admin", adminRoute);

@@ -2,7 +2,8 @@ const Member = require("../models/Member");
 
 //*register MEMBER....................................................
 const registerMember = async (req, res) => {
-  const { username, email, phone, joining, plan, planId, pic } = req.body;
+  const { username, email, phone, joining, plan, planId } = req.body;
+  const { secure_url, public_id } = req.file;
 
   try {
     if (!username || !email || !phone || !joining || !planId || !plan) {
@@ -41,7 +42,8 @@ const registerMember = async (req, res) => {
       monthCode,
       plan,
       planId,
-      pic,
+      pic: secure_url,
+      picId: public_id,
     });
     const savedMember = await newMember.save();
 
@@ -99,17 +101,17 @@ const editMember = async (req, res) => {
     joining,
     lastActive,
     plan,
-    pic,
     planId,
   } = req.body;
+  const { secure_url, public_id } = req.file;
 
-  let getDate = new Date(joining);
-  let currentMonthCode = `${getDate.getFullYear()}${getDate.getMonth() + 1}`;
+  //let getDate = new Date(joining);
+  //let currentMonthCode = `${getDate.getFullYear()}${getDate.getMonth() + 1}`;
 
   let monthCode;
   let getMonth;
 
-  if (!username && !email && !phone && !pic && !planId && !isActive) {
+  if (!username && !email && !phone && !planId && !isActive) {
     return res
       .status(401)
       .json(" At least one field is required to updated Member...!");
@@ -119,6 +121,7 @@ const editMember = async (req, res) => {
     getUsername: "",
     getEmail: "",
     getPic: "",
+    getpicId: "",
     getisActive: "",
     getPhone: "",
     getJoining: "",
@@ -170,6 +173,11 @@ const editMember = async (req, res) => {
     } else {
       getUser.getPic = pic;
     }
+    if (!public_id) {
+      getUser.getpicId = user.pic;
+    } else {
+      getUser.getpicId = public_id;
+    }
     if (!planId) {
       getUser.getPlanId = user.planId;
     } else {
@@ -177,7 +185,6 @@ const editMember = async (req, res) => {
     }
     if (!lastActive) {
       getMonth = new Date(user.lastActive);
-      // monthCode = `${getMonth.getFullYear()}${getMonth.getMonth() + 1}`;
       monthCode = user.monthCode;
     } else {
       getMonth = new Date(getUser.getLastActive);
@@ -196,6 +203,7 @@ const editMember = async (req, res) => {
       plan: getUser.getPlan,
       planId: getUser.getPlanId,
       pic: getUser.getPic,
+      picId: getUser.getpicId
     });
 
     res.status(200).json(" User has been updated......! ");
@@ -242,7 +250,7 @@ const getAllMember = async (req, res) => {
     const keyword = req.query.search
       ? {
           $or: [
-            { name: { $regex: req.query.search, $options: "i" } },
+            { username: { $regex: req.query.search, $options: "i" } },
             { email: { $regex: req.query.search, $options: "i" } },
           ],
         }

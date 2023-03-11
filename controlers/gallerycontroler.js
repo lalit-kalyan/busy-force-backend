@@ -2,14 +2,17 @@ const Gallery = require("../models/Gallery");
 
 //?....ADD NEW IMAGE.....
 const addImage = async (req, res) => {
-  const { title, pic } = req.body;
-  console.log({ title, pic });
+  const { title } = req.body;
+  console.log("FILE DATA", req.file);
+  const { secure_url, public_id } = req.file;
+
   try {
     const newImage = await Gallery.create({
-      pic,
+      pic: secure_url,
       title,
+      publicId: public_id,
     });
-    res.status(201).json(newImage);
+    res.status(201).json(" image uploaded");
   } catch (error) {
     res.status(500).json(error);
   }

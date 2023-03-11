@@ -1,10 +1,11 @@
 const jwt = require("jsonwebtoken");
+const path = require("path");
 const Admin = require("../models/Admin");
-const cloudinary = require("cloudinary").v2;
 
 //*register COntrollers....................................................
 const registerAdmin = async (req, res) => {
   const { username, email, phone, pic } = req.body;
+  const { secure_url, public_id } = req.file;
 
   try {
     if (!username || !email || !phone) {
@@ -33,7 +34,8 @@ const registerAdmin = async (req, res) => {
       username,
       email,
       phone,
-      pic,
+      pic: secure_url,
+      picId: public_id,
     });
     if (admin) {
       res.status(201).json({
@@ -99,15 +101,22 @@ const adminLogin = async (req, res) => {
 //!.................EDIT USER...................................
 const editAdmin = async (req, res) => {
   const { userId } = req.params;
-  console.log(userId);
+  //console.log(userId);
 
-  const { username, email, phone, isAdmin, pic } = req.body;
-  console.log(pic);
-  if (!username && !email && !phone && !isAdmin && !pic) {
+  const { username, email, phone, isAdmin } = req.body;
+  console.log("BODY", { username, email, phone, isAdmin });
+  const { secure_url, public_id } = req.file;
+  console.log("FILE", req.file.secure_url);
+
+  if (!username && !email && !phone && !isAdmin) {
+    console.log(
+      "ERROR:-->  At least one field is required to updated Admin...! "
+    );
     return res
       .status(401)
       .json(" At least one field is required to updated Admin...!");
   }
+  
 
   const getUser = {
     getUsername: "",
@@ -115,6 +124,7 @@ const editAdmin = async (req, res) => {
     getIsAdmin: "",
     getPhone: "",
     getPic: "",
+    getPicId: "",
   };
 
   try {
@@ -140,14 +150,20 @@ const editAdmin = async (req, res) => {
     } else {
       getUser.getPhone = phone;
     }
-    if (!pic) {
+    if (!secure_url) {
       getUser.getPic = user.pic;
     } else {
-      getUser.getPic = pic;
+      getUser.getPic = secure_url;
     }
+    if (!public_id) {
+      getUser.getPicId = user.picId;
+    } else {
+      getUser.getPicId = public_id;
+    }
+    console.log("line 163 here");
 
     // console.log(" db USER.......>>", user);
-    // console.log("get USER.......>>", getUser);
+     console.log("get USER.......>>", getUser);
 
     const updateAdmin = await Admin.findByIdAndUpdate(
       userId,
@@ -157,6 +173,7 @@ const editAdmin = async (req, res) => {
         pic: getUser.getPic,
         isAdmin: getUser.getIsAdmin,
         phone: getUser.getPhone,
+        picId: getUser.getPicId,
       },
       {
         new: true,

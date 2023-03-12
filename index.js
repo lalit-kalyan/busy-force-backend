@@ -15,7 +15,15 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 connectDB();
 app.use(express.json());
-app.use(cors({ origin: true, credentials: true }));
+const corsOpts = {
+  origin: "*",
+
+  methods: ["GET", "POST", "PUT", "DELETE"],
+
+  allowedHeaders: ["Content-Type"],
+};
+
+app.use(cors(corsOpts));
 
 //ROUTER.............
 app.use("/api/admin", adminRoute);

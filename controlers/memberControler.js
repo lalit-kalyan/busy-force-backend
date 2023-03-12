@@ -1,9 +1,21 @@
 const Member = require("../models/Member");
+const { deleteCloudeImage } = require("../cinfig/cloudeImgDlt");
 
 //*register MEMBER....................................................
 const registerMember = async (req, res) => {
+  console.log(req.body);
   const { username, email, phone, joining, plan, planId } = req.body;
-  const { secure_url, public_id } = req.file;
+
+  let secure_url;
+  let public_id;
+  if (!req.file) {
+    secure_url = "";
+    public_id = "";
+  } else {
+    secure_url = req.file.secure_url;
+    public_id = req.file.public_id;
+  }
+  //const { secure_url, public_id } = req.file;
 
   try {
     if (!username || !email || !phone || !joining || !planId || !plan) {
@@ -93,6 +105,7 @@ const memberLogin = async (req, res) => {
 //?.................EDIT USER...................................
 const editMember = async (req, res) => {
   const { userId } = req.params;
+
   const {
     username,
     email,
@@ -103,15 +116,22 @@ const editMember = async (req, res) => {
     plan,
     planId,
   } = req.body;
-  const { secure_url, public_id } = req.file;
 
-  //let getDate = new Date(joining);
-  //let currentMonthCode = `${getDate.getFullYear()}${getDate.getMonth() + 1}`;
+  let secure_url;
+  let public_id;
+
+  if (!req.file) {
+    secure_url = "";
+    public_id = "";
+  } else {
+    secure_url = req.file.secure_url;
+    public_id = req.file.public_id;
+  }
 
   let monthCode;
   let getMonth;
 
-  if (!username && !email && !phone && !planId && !isActive) {
+  if (!username && !email && !phone && !planId && !isActive && !plan) {
     return res
       .status(401)
       .json(" At least one field is required to updated Member...!");
@@ -148,7 +168,7 @@ const editMember = async (req, res) => {
     } else {
       getUser.getPhone = phone;
     }
-    if (!isActive) {
+    if (isActive == "null") {
       getUser.getisActive = user.isActive;
     } else {
       getUser.getisActive = isActive;
@@ -168,15 +188,16 @@ const editMember = async (req, res) => {
     } else {
       getUser.getPlan = plan;
     }
-    if (!pic) {
+    if (!secure_url) {
       getUser.getPic = user.pic;
     } else {
-      getUser.getPic = pic;
+      getUser.getPic = secure_url;
     }
     if (!public_id) {
       getUser.getpicId = user.pic;
     } else {
       getUser.getpicId = public_id;
+      deleteCloudeImage(user.picId);
     }
     if (!planId) {
       getUser.getPlanId = user.planId;
@@ -190,6 +211,9 @@ const editMember = async (req, res) => {
       getMonth = new Date(getUser.getLastActive);
       monthCode = `${getMonth.getFullYear()}${getMonth.getMonth() + 1}`;
     }
+
+    //console.log("GET-USER--->", getUser);
+
     getUser.getMonthCode = monthCode;
 
     await Member.findByIdAndUpdate(userId, {
@@ -203,7 +227,7 @@ const editMember = async (req, res) => {
       plan: getUser.getPlan,
       planId: getUser.getPlanId,
       pic: getUser.getPic,
-      picId: getUser.getpicId
+      picId: getUser.getpicId,
     });
 
     res.status(200).json(" User has been updated......! ");
@@ -221,6 +245,7 @@ const deleteMember = async (req, res) => {
       //console.log(user);
       if (user) {
         await Member.findByIdAndDelete(userId);
+        deleteCloudeImage(user.picId);
         res.status(200).json("user has been deleted..........!");
       } else {
         res.status(401).json(" user  did not find.......!");

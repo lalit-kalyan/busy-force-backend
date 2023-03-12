@@ -11,15 +11,13 @@ cloudinary.config({
 });
 
 const imageUploader = async (req, res, next) => {
-  const { path } = req.file;
-
-  const options = {
-    use_filename: true,
-    unique_filename: false,
-    overwrite: true,
-  };
-
   if (req.file) {
+    const options = {
+      use_filename: true,
+      unique_filename: false,
+      overwrite: true,
+    };
+    const { path } = req.file;
     try {
       const result = await cloudinary.uploader.upload(path, options);
       //console.log("from RESULT----->", result);

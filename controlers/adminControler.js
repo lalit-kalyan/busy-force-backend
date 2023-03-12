@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const Admin = require("../models/Admin");
+const { deleteCloudeImage } = require("../cinfig/cloudeImgDlt");
 
 //*register COntrollers....................................................
 const registerAdmin = async (req, res) => {
@@ -104,19 +105,23 @@ const editAdmin = async (req, res) => {
   //console.log(userId);
 
   const { username, email, phone, isAdmin } = req.body;
-  console.log("BODY", { username, email, phone, isAdmin });
-  const { secure_url, public_id } = req.file;
-  console.log("FILE", req.file.secure_url);
+  let secure_url;
+  let public_id;
+  if (!req.file) {
+    secure_url = "";
+    public_id = "";
+  } else {
+    secure_url = req.file.secure_url;
+    public_id = req.file.public_id;
+  }
 
-  if (!username && !email && !phone && !isAdmin) {
-    console.log(
-      "ERROR:-->  At least one field is required to updated Admin...! "
-    );
+  //const { secure_url, public_id } = req.file;
+
+  if (!username && !email && !phone && !isAdmin && !public_id) {
     return res
       .status(401)
       .json(" At least one field is required to updated Admin...!");
   }
-  
 
   const getUser = {
     getUsername: "",
@@ -129,6 +134,7 @@ const editAdmin = async (req, res) => {
 
   try {
     const user = await Admin.findById(userId);
+    //console.log("USER->" , user);
 
     if (!username) {
       getUser.getUsername = user.username;
@@ -140,7 +146,7 @@ const editAdmin = async (req, res) => {
     } else {
       getUser.getEmail = email;
     }
-    if (!isAdmin) {
+    if (isAdmin == "null") {
       getUser.getIsAdmin = user.isAdmin;
     } else {
       getUser.getIsAdmin = isAdmin;
@@ -159,11 +165,11 @@ const editAdmin = async (req, res) => {
       getUser.getPicId = user.picId;
     } else {
       getUser.getPicId = public_id;
+      deleteCloudeImage(user.picId);
     }
-    console.log("line 163 here");
 
     // console.log(" db USER.......>>", user);
-     console.log("get USER.......>>", getUser);
+    //console.log("get-USER.......>>", getUser);
 
     const updateAdmin = await Admin.findByIdAndUpdate(
       userId,
@@ -192,9 +198,10 @@ const deleteAdmin = async (req, res) => {
   try {
     if (userId) {
       const user = await Admin.findById(userId);
-      console.log(user);
+      //console.log(user);
       if (user) {
         await Admin.findByIdAndDelete(userId);
+        deleteCloudeImage(user.picId);
         res.status(200).json("user has been deleted..........!");
       } else {
         res.status(401).json(" user  did not finde.......!");

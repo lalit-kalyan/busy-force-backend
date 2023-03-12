@@ -1,9 +1,10 @@
 const Gallery = require("../models/Gallery");
+const { deleteCloudeImage } = require("../cinfig/cloudeImgDlt");
 
 //?....ADD NEW IMAGE.....
 const addImage = async (req, res) => {
   const { title } = req.body;
-  console.log("FILE DATA", req.file);
+  //console.log("FILE DATA", req.file);
   const { secure_url, public_id } = req.file;
 
   try {
@@ -32,9 +33,10 @@ const deleteImage = async (req, res) => {
   const { imageId } = req.params;
 
   try {
-    const image = await Gallery.findById(imageId);
+    const image = await Gallery.findOne({ publicId: imageId });
     if (image) {
-      await Gallery.findByIdAndDelete(imageId);
+      await Gallery.findOneAndDelete({ publicId: imageId });
+      deleteCloudeImage(imageId);
       res.status(201).json("The image has been deleted...!");
     } else {
       res.status(401).json("the image is not find...!");

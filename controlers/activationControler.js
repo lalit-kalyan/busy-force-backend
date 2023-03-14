@@ -72,23 +72,23 @@ const manulaActivation = async (req, res) => {
 
     //*---------silver---------------
     if (member.planId === "silver") {
-      newActiveDate = silverActivate(lastActiveDate, todaysDate);
+      newActiveDate = silverActivate(lastActiveDate, member.isActive);
       activate = true;
     }
     //*---------gold-----------------
     if (member.planId === "gold") {
-      newActiveDate = goldActivate(lastActiveDate, todaysDate);
+      newActiveDate = goldActivate(lastActiveDate, member.isActive);
       activate = true;
     }
     //*---------platinum-------------
     if (member.planId === "platinum") {
-      newActiveDate = platinumActive(lastActiveDate, todaysDate);
+      newActiveDate = platinumActive(lastActiveDate, member.isActive);
 
       activate = true;
     }
     //*---------diamond--------------
     if (member.planId === "diamond") {
-      newActiveDate = diamondActivate(lastActiveDate, todaysDate);
+      newActiveDate = diamondActivate(lastActiveDate, member.isActive);
       activate = true;
     }
     //*------UPDATE MEMBER------

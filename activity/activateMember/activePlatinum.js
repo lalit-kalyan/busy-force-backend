@@ -1,5 +1,5 @@
-const platinumActive = (lastActiveDate, todaysDate) => {
-  if (lastActiveDate <= todaysDate) {
+const platinumActive = (lastActiveDate, isActive) => {
+  if (isActive === false) {
     const memberLastActiveDate = new Date(
       lastActiveDate.setMonth(lastActiveDate.getMonth() + 6)
     );

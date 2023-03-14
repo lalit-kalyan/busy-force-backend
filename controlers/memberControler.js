@@ -3,7 +3,7 @@ const { deleteCloudeImage } = require("../cinfig/cloudeImgDlt");
 
 //*register MEMBER....................................................
 const registerMember = async (req, res) => {
-  console.log(req.body);
+ // console.log(req.body);
   const { username, email, phone, joining, plan, planId, address } = req.body;
   
 

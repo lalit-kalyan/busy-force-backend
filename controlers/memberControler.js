@@ -6,17 +6,6 @@ const registerMember = async (req, res) => {
   console.log(req.body);
   const { username, email, phone, joining, plan, planId } = req.body;
 
-  let secure_url;
-  let public_id;
-  if (!req.file) {
-    secure_url = "";
-    public_id = "";
-  } else {
-    secure_url = req.file.secure_url;
-    public_id = req.file.public_id;
-  }
-  //const { secure_url, public_id } = req.file;
-
   try {
     if (!username || !email || !phone || !joining || !planId || !plan) {
       return res
@@ -54,8 +43,6 @@ const registerMember = async (req, res) => {
       monthCode,
       plan,
       planId,
-      pic: secure_url,
-      picId: public_id,
     });
     const savedMember = await newMember.save();
 
@@ -117,17 +104,6 @@ const editMember = async (req, res) => {
     planId,
   } = req.body;
 
-  let secure_url;
-  let public_id;
-
-  if (!req.file) {
-    secure_url = "";
-    public_id = "";
-  } else {
-    secure_url = req.file.secure_url;
-    public_id = req.file.public_id;
-  }
-
   let monthCode;
   let getMonth;
 
@@ -140,8 +116,6 @@ const editMember = async (req, res) => {
   const getUser = {
     getUsername: "",
     getEmail: "",
-    getPic: "",
-    getpicId: "",
     getisActive: "",
     getPhone: "",
     getJoining: "",
@@ -188,17 +162,6 @@ const editMember = async (req, res) => {
     } else {
       getUser.getPlan = plan;
     }
-    if (!secure_url) {
-      getUser.getPic = user.pic;
-    } else {
-      getUser.getPic = secure_url;
-    }
-    if (!public_id) {
-      getUser.getpicId = user.pic;
-    } else {
-      getUser.getpicId = public_id;
-      deleteCloudeImage(user.picId);
-    }
     if (!planId) {
       getUser.getPlanId = user.planId;
     } else {
@@ -226,8 +189,6 @@ const editMember = async (req, res) => {
       lastActive: getUser.getLastActive,
       plan: getUser.getPlan,
       planId: getUser.getPlanId,
-      pic: getUser.getPic,
-      picId: getUser.getpicId,
     });
 
     res.status(200).json(" User has been updated......! ");

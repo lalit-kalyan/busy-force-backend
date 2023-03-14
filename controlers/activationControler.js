@@ -71,23 +71,23 @@ const manulaActivation = async (req, res) => {
     let activate = member.isActive;
 
     //*---------silver---------------
-    if (member.planId === "silver") {
+    if (member.planId === "silver" || member.planId === "pro_silver") {
       newActiveDate = silverActivate(lastActiveDate, member.isActive);
       activate = true;
     }
     //*---------gold-----------------
-    if (member.planId === "gold") {
+    if (member.planId === "gold" || member.planId === "pro_gold") {
       newActiveDate = goldActivate(lastActiveDate, member.isActive);
       activate = true;
     }
     //*---------platinum-------------
-    if (member.planId === "platinum") {
+    if (member.planId === "platinum" || member.planId === "pro_platinum") {
       newActiveDate = platinumActive(lastActiveDate, member.isActive);
 
       activate = true;
     }
     //*---------diamond--------------
-    if (member.planId === "diamond") {
+    if (member.planId === "diamond" || member.planId === "pro_diamond") {
       newActiveDate = diamondActivate(lastActiveDate, member.isActive);
       activate = true;
     }

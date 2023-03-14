@@ -4,10 +4,19 @@ const { deleteCloudeImage } = require("../cinfig/cloudeImgDlt");
 //*register MEMBER....................................................
 const registerMember = async (req, res) => {
   console.log(req.body);
-  const { username, email, phone, joining, plan, planId } = req.body;
+  const { username, email, phone, joining, plan, planId, address } = req.body;
+  
 
   try {
-    if (!username || !email || !phone || !joining || !planId || !plan) {
+    if (
+      !username ||
+      !email ||
+      !phone ||
+      !joining ||
+      !planId ||
+      !plan ||
+      !address
+    ) {
       return res
         .status(401)
         .json(
@@ -37,6 +46,7 @@ const registerMember = async (req, res) => {
     const newMember = new Member({
       username,
       email,
+      address,
       phone,
       joining,
       lastActive: joining,

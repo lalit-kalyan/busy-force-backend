@@ -71,7 +71,11 @@ const manulaActivation = async (req, res) => {
     let activate = member.isActive;
 
     //*---------silver---------------
-    if (member.planId === "silver" || member.planId === "pro_silver") {
+    if (member.planId === "silver") {
+      newActiveDate = silverActivate(lastActiveDate, member.isActive);
+      activate = true;
+    }
+    if (member.planId === "pro_silver") {
       newActiveDate = silverActivate(lastActiveDate, member.isActive);
       activate = true;
     }

@@ -20,23 +20,23 @@ const autoDeactivate = async (req, res) => {
     let activationCancle = null;
 
     //!---------------silver Plan----------------------
-    if (member.planId === "silver") {
+    if (member.planId === "silver" || member.planId === "proSilver") {
       activationCancle = silverDeative(lastActiveDate, todaysDate);
       //console.log("silver member:", activationCancle);
     }
 
     //!---------------gold Plan------------------------
-    if (member.planId === "gold") {
+    if (member.planId === "gold" || member.planId === "proGold") {
       activationCancle = goldDeactivate(lastActiveDate, todaysDate);
     }
 
     //!---------------platinum Plan--------------------
-    if (member.planId === "platinum") {
+    if (member.planId === "platinum" || member.planId === "proPlatinum") {
       activationCancle = platinumDeactive(lastActiveDate, todaysDate);
     }
 
     //!---------------diomond Plan---------------------
-    if (member.planId === "diamond") {
+    if (member.planId === "diamond" || member.planId === "proDiamond") {
       activationCancle = diamondDeactive(lastActiveDate, todaysDate);
     }
 
@@ -69,29 +69,27 @@ const manulaActivation = async (req, res) => {
     const todaysDate = new Date();
     let newActiveDate = lastActiveDate;
     let activate = member.isActive;
+    //console.log(member.planId);
 
     //*---------silver---------------
-    if (member.planId === "silver") {
+    if (member.planId === "silver" || member.planId === "proSilver") {
       newActiveDate = silverActivate(lastActiveDate, member.isActive);
       activate = true;
     }
-    if (member.planId === "pro_silver") {
-      newActiveDate = silverActivate(lastActiveDate, member.isActive);
-      activate = true;
-    }
+
     //*---------gold-----------------
-    if (member.planId === "gold" || member.planId === "pro_gold") {
+    if (member.planId === "gold" || member.planId === "proGold") {
       newActiveDate = goldActivate(lastActiveDate, member.isActive);
       activate = true;
     }
     //*---------platinum-------------
-    if (member.planId === "platinum" || member.planId === "pro_platinum") {
+    if (member.planId === "platinum" || member.planId === "proPlatinum") {
       newActiveDate = platinumActive(lastActiveDate, member.isActive);
 
       activate = true;
     }
     //*---------diamond--------------
-    if (member.planId === "diamond" || member.planId === "pro_diamond") {
+    if (member.planId === "diamond" || member.planId === "proDiamond") {
       newActiveDate = diamondActivate(lastActiveDate, member.isActive);
       activate = true;
     }
